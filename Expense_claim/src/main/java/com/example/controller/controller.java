@@ -5,7 +5,6 @@ package com.example.controller;
 import java.util.List; 
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.format.number.money.MonetaryAmountFormatter;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -98,39 +97,31 @@ public class controller {
 	        return companyRepo.findAll();
 	    }
 
-	    // Get a company by ID
+	  
 	    @GetMapping("/company/{id}")
 	    public Company getCompanyById(@PathVariable Long id) {
 	        return companyRepo.findById(id).orElse(null);
 	    }
 	 
 	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 @PostMapping("/user/claim/{userId}")
-	    public String processAndCheckClaim(@PathVariable Long userId, @RequestBody user newUser) {
+	
+	 @GetMapping("/user/claim/{userId}/{comid}")
+	    public String processAndCheckClaim(@PathVariable Long userId, @PathVariable Long comid) {
 	        user user = userRepo.findById(userId).orElse(null);
 	        if (user == null) {
 	            return "User not found.";
 	        }
 
-	        Company company = companyRepo.findById(1L).orElse(null); // Assuming one company with ID 1
+	       
+	        Company company =  companyRepo.findById(comid).orElse(null); 
 	        if (company != null) {
 	            if (user.getClaimAmount() > company.getFixedAmount()) {
 	                return "Claim amount is more than the company policy.";
 	            } else {
-	                // Refund the user's claim amount
+	                
 	                Long refundAmount = user.getClaimAmount();
-	                user.setClaimAmount(0L); // Reset user's claim amount to 0
-	                userRepo.save(user); // Save the updated user
+	                user.setClaimAmount(0L);
+	                userRepo.save(user); 
 
 	                return "Claim amount refunded: " + refundAmount;
 	            }
